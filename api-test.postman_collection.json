@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8e423c49-8cfa-476d-90c2-611a61803d40",
+		"_postman_id": "d476ece3-b86a-4e71-97b6-d34563e93ed0",
 		"name": "api-test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "1889120"
@@ -102,6 +102,29 @@
 						"v1",
 						"shorts",
 						"short-links"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_short_count",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/shorts/counts/2ek",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"shorts",
+						"counts",
+						"2ek"
 					]
 				}
 			},

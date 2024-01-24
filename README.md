@@ -10,17 +10,22 @@
 ![img_1.png](img_1.png)
 - Short Link Origin url redirect API
 ![img_2.png](img_2.png)
+- Short Link 7일 조회 API
+![img_4.png](img_4.png)
+- 테스트 코드
+![img_3.png](img_3.png)
 
 ## Hot to Run
 ```shell
 # 가상환경 구축 및 활성 
 virtualenv venv --python=python3.12
 source venv/bin/activate
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 
 # database 실행
 docker-compose -f ./app/db/docker-compose.yaml up -d
 
+# 1~2분 대기
 # mysql migration
 alembic upgrade head
 

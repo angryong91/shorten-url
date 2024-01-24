@@ -1,9 +1,12 @@
+from typing import List
+
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 
 from app.exceptions import Conflict, NotFound
-from app.models.short import ShortCreate, ShortInfo
-from app.services.short import create_short, get_short, get_cache_url, set_cache_url, create_short_click
+from app.models.short import ShortCreate, ShortInfo, ShortCounts
+from app.services.short import create_short, get_short, get_cache_url, set_cache_url, create_short_click, \
+    count_short_click
 
 router = APIRouter()
 
@@ -36,3 +39,13 @@ async def redirect_to_original(short_id: str):
 
     await create_short_click(short_id)
     return RedirectResponse(origin_url, status_code=302)
+
+
+@router.get("/counts/{short_id}", response_model=List[ShortCounts])
+async def count_shorts(short_id: str):
+    short = get_short(short_id)
+    if not short:
+        raise NotFound()
+
+    result = await count_short_click(short_id)
+    return result
