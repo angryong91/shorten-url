@@ -2,7 +2,7 @@ import json
 import logging
 import os
 import traceback
-from datetime import timedelta, datetime
+from datetime import datetime, UTC
 from logging.handlers import RotatingFileHandler
 from time import time
 
@@ -10,6 +10,7 @@ from fastapi.logger import logger
 from fastapi.requests import Request
 
 from app.core.config import settings
+from app.utils.date import utc_to_kst
 
 log_file_path = os.path.join(settings.BASE_DIR, "logs/server.log")
 if not os.path.exists(os.path.dirname(log_file_path)):
@@ -44,8 +45,8 @@ async def api_logger(request: Request, response=None, error=None):
         errorDetail=str(error_log),
         client=str(request.state.ip),
         processedTime=str(round(t * 1000, 5)) + "ms",
-        datetimeUTC=datetime.utcnow().strftime(time_format),
-        datetimeKST=(datetime.utcnow() + timedelta(hours=9)).strftime(time_format),
+        datetimeUTC=datetime.now(UTC).strftime(time_format),
+        datetimeKST=utc_to_kst(datetime.now(UTC)).strftime(time_format),
     )
     if error and error.status_code >= 500:
         logger.error(traceback.format_exc())

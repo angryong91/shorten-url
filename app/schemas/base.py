@@ -1,10 +1,8 @@
-from uuid import uuid4
+from datetime import datetime, UTC
 
 from sqlalchemy import (
     Column,
-    String,
     DateTime,
-    func,
     or_,
 )
 from sqlalchemy.orm import Session
@@ -13,8 +11,8 @@ from app.db.mysql import db
 
 
 class BaseMixin:
-    created_at = Column(DateTime, nullable=False, default=func.current_timestamp())
-    updated_at = Column(DateTime, nullable=False, default=func.current_timestamp(), onupdate=func.current_timestamp())
+    created_at = Column(DateTime, nullable=False, default=datetime.now(UTC))
+    updated_at = Column(DateTime, nullable=False, default=datetime.now(UTC), onupdate=datetime.now(UTC))
     deleted_at = Column(DateTime, nullable=True)
 
     def __init__(self):

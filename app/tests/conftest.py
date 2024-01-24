@@ -1,18 +1,17 @@
 from typing import Generator
-from starlette.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils import create_database, database_exists, drop_database
-from sqlalchemy.orm import declarative_base
-
-from app.main import app
-from app.core.config import settings
 
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy_utils import create_database, database_exists, drop_database
+from starlette.testclient import TestClient
 
+from app.core.config import settings
+from app.main import app
 from app.schemas import Shorts
 from app.schemas.short import ShortClicks
-from app.services.short import set_cache_url
+from app.services.short import set_cache_url, del_cache_url
 
 TEST_DATABASE_URL = f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_SERVER}/test"
 TEST_REDIS_URL = f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/test" \
@@ -54,11 +53,22 @@ def app_client():
 
 
 @pytest.fixture
-def create_shorts():
+def create_shorts(request):
     Shorts.create(id="3rc", origin_url="https://airbridge.io")
     ShortClicks.create(short_id="3rc")
 
+    def delete_shorts():
+        Shorts.filter(id="3rc").delete()
+        ShortClicks.filter(short_id="3rc").delete()
+
+    request.addfinalizer(delete_shorts)
+
 
 @pytest.fixture
-def caching_shorts():
+def caching_shorts(request):
     set_cache_url("3rc", "https://airbridge.io")
+
+    def delete_cache():
+        del_cache_url("3rc")
+
+    request.addfinalizer(delete_cache)

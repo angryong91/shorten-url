@@ -1,7 +1,7 @@
 import hashlib
-import base62
-
 from uuid import uuid4
+
+import base62
 
 
 def shorten_url(url: str) -> str:

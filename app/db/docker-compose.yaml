@@ -18,3 +18,13 @@ services:
     command: redis-server --requirepass test1234
     ports:
       - "6379:6379"
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin1234
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb/db:/data/db

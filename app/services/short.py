@@ -1,7 +1,10 @@
+from datetime import datetime, UTC
 from typing import Union
 
+from app.db.mongo import mongodb
 from app.db.redis import get_client
 from app.schemas.short import Shorts, ShortClicks
+from app.utils.date import kst_today, datetime_range
 from app.utils.hash import shorten_url
 
 
@@ -16,7 +19,7 @@ def create_short(origin_url: str) -> Union[None, Shorts]:
             count += 1
         else:
             short = Shorts.create(id=hash_url[:count], origin_url=origin_url)
-            ShortClicks.create(short_id=short.id)
+            ShortClicks.create(short_id=short.id, created_at=kst_today())
             set_cache_url(short.id, origin_url)
             return short
 
@@ -35,6 +38,16 @@ def set_cache_url(short_id: str, origin_url: str, expire_time: int = 3600) -> bo
     return redis.set(short_id, str(origin_url), expire_time)
 
 
-def update_short_click(short_id: str):
-    short_click = ShortClicks.get(short_id=short_id)
-    ShortClicks.filter(short_id=short_id).update(click_count=short_click.click_count + 1)
+def del_cache_url(short_id: str) -> bool:
+    redis = get_client()
+    return redis.delete(short_id)
+
+
+async def create_short_click(short_id: str):
+    short_click = dict(short_id=short_id, created_at=datetime.now(UTC))
+    await mongodb.collection.insert_one(short_click)
+
+
+async def count_short_click(short_id: str) -> int:
+    start, end = datetime_range()
+    return await mongodb.collection.count_documents({"short_id": short_id, "created_at": {"$gte": start, "$lt": end}})

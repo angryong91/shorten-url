@@ -1,15 +1,15 @@
 from os import environ, path
-from dotenv import load_dotenv
 from typing import List, Union
 
+from dotenv import load_dotenv
 from pydantic import AnyHttpUrl, field_validator
-
 from pydantic_settings import BaseSettings
 
 load_dotenv(verbose=True)
 
 
 class Settings(BaseSettings):
+    # ENV_STATE: str = environ.get("ENV_STATE", "dev")
     PROJECT_NAME: str = 'ab180-shorten-url'
     DOMAIN: str = environ.get("DOMAIN", "localhost")
     PORT: int = environ.get("PORT", "8080")
@@ -43,8 +43,36 @@ class Settings(BaseSettings):
     REDIS_URL: str = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}" \
         if REDIS_PASSWORD else f"redis://{REDIS_HOST}:{REDIS_PORT}"
 
+    # mongo
+    MONGO_DB_HOST: str = environ.get("MONGO_DB_HOST", "localhost")
+    MONGO_DB_PORT: int = environ.get("MONGO_DB_PORT", 27017)
+    MONGO_DB_USER: str = environ.get("MONGO_DB_USER", "admin")
+    MONGO_DB_PASSWORD: str = environ.get("MONGO_DB_PASSWORD", "admin1234")
+    MONGO_DB_URL: str = f"mongodb://{MONGO_DB_USER}:{MONGO_DB_PASSWORD}@{MONGO_DB_HOST}:{MONGO_DB_PORT}"
+    MONGO_DB_NAME: str = environ.get("MONGO_DB_NAME", "short_click")
+
     class Config:
         case_sensitive = True
 
 
+# class TestSettings(Settings):
+#     MYSQL_DB: str = "test"
+#     MONGO_DB_NAME: str = "test"
+#
+#
+# class DevSettings(Settings):
+#     MYSQL_DB: str = "dev"
+#     MONGO_DB_NAME: str = "dev"
+#
+# @lru_cache
+# def get_settings():
+#     print(Settings().ENV_STATE)
+#     env_state = Settings().ENV_STATE
+#     if env_state == "test":
+#         return TestSettings()
+#     elif env_state == "dev":
+#         return DevSettings()
+
+
 settings = Settings()
+

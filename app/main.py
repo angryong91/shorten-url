@@ -1,13 +1,13 @@
 import uvicorn
-
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.middleware.logger_middleware import LoggerMiddleware
-from app.routes import api_router
 from app.core.config import settings
+from app.db.mongo import mongodb
 from app.db.mysql import db
 from app.db.redis import set_client, discard_client
+from app.middleware.logger_middleware import LoggerMiddleware
+from app.routes import api_router
 
 
 def create_app():
@@ -25,6 +25,9 @@ def create_app():
     # init redis
     app.add_event_handler('startup', set_client)
     app.add_event_handler('shutdown', discard_client)
+
+    # init mongo
+    mongodb.init_app(app, settings)
 
     # set middleware
     app.add_middleware(

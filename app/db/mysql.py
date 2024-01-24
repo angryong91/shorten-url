@@ -1,20 +1,19 @@
 from fastapi import FastAPI
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-from app.core.config import settings
+from app.core.config import Settings
 from app.utils.logger import logger
 
 
 class SQLAlchemy:
-    def __init__(self, app: FastAPI = None, settings: settings = None):
+    def __init__(self, app: FastAPI = None, settings: Settings = None):
         self._engine = None
         self._session = None
         if app is not None:
             self.init_app(app=app, settings=settings)
 
-    def init_app(self, app: FastAPI = None, settings: settings = None):
+    def init_app(self, app: FastAPI = None, settings: Settings = None):
         self._engine = create_engine(
             settings.DB_URL,
             pool_size=settings.DB_POOL_SIZE,
