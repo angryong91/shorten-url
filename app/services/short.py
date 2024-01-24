@@ -3,8 +3,8 @@ from typing import Union
 
 from app.db.mongo import mongodb
 from app.db.redis import get_client
-from app.schemas.short import Shorts, ShortClicks
-from app.utils.date import kst_today, datetime_range
+from app.schemas.short import Shorts
+from app.utils.date import datetime_range
 from app.utils.hash import shorten_url
 
 
@@ -19,7 +19,6 @@ def create_short(origin_url: str) -> Union[None, Shorts]:
             count += 1
         else:
             short = Shorts.create(id=hash_url[:count], origin_url=origin_url)
-            ShortClicks.create(short_id=short.id, created_at=kst_today())
             set_cache_url(short.id, origin_url)
             return short
 

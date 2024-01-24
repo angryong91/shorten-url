@@ -10,7 +10,6 @@ from starlette.testclient import TestClient
 from app.core.config import settings
 from app.main import app
 from app.schemas import Shorts
-from app.schemas.short import ShortClicks
 from app.services.short import set_cache_url, del_cache_url
 
 TEST_DATABASE_URL = f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_SERVER}/test"
@@ -55,11 +54,9 @@ def app_client():
 @pytest.fixture
 def create_shorts(request):
     Shorts.create(id="3rc", origin_url="https://airbridge.io")
-    ShortClicks.create(short_id="3rc")
 
     def delete_shorts():
         Shorts.filter(id="3rc").delete()
-        ShortClicks.filter(short_id="3rc").delete()
 
     request.addfinalizer(delete_shorts)
 

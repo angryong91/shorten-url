@@ -3,8 +3,7 @@ from fastapi.responses import RedirectResponse
 
 from app.exceptions import Conflict, NotFound
 from app.models.short import ShortCreate, ShortInfo
-from app.services.short import create_short, get_short, get_cache_url, set_cache_url, create_short_click, \
-    count_short_click
+from app.services.short import create_short, get_short, get_cache_url, set_cache_url, create_short_click
 
 router = APIRouter()
 
@@ -36,5 +35,4 @@ async def redirect_to_original(short_id: str):
         origin_url = short.origin_url
 
     await create_short_click(short_id)
-    await count_short_click(short_id)
     return RedirectResponse(origin_url, status_code=302)

@@ -9,7 +9,6 @@ load_dotenv(verbose=True)
 
 
 class Settings(BaseSettings):
-    # ENV_STATE: str = environ.get("ENV_STATE", "dev")
     PROJECT_NAME: str = 'ab180-shorten-url'
     DOMAIN: str = environ.get("DOMAIN", "localhost")
     PORT: int = environ.get("PORT", "8080")
@@ -53,25 +52,6 @@ class Settings(BaseSettings):
 
     class Config:
         case_sensitive = True
-
-
-# class TestSettings(Settings):
-#     MYSQL_DB: str = "test"
-#     MONGO_DB_NAME: str = "test"
-#
-#
-# class DevSettings(Settings):
-#     MYSQL_DB: str = "dev"
-#     MONGO_DB_NAME: str = "dev"
-#
-# @lru_cache
-# def get_settings():
-#     print(Settings().ENV_STATE)
-#     env_state = Settings().ENV_STATE
-#     if env_state == "test":
-#         return TestSettings()
-#     elif env_state == "dev":
-#         return DevSettings()
 
 
 settings = Settings()
