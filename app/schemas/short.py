@@ -1,10 +1,9 @@
+from app.db.mysql import Base
+from app.schemas.base import BaseMixin
 from sqlalchemy import (
     Column,
     String
 )
-
-from app.db.mysql import Base
-from app.schemas.base import BaseMixin
 
 
 class Shorts(Base, BaseMixin):

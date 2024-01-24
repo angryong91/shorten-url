@@ -11,9 +11,9 @@
 - Short Link Origin url redirect API
 ![img_2.png](img_2.png)
 - Short Link 7일 조회 API
-![img_4.png](img_4.png)
-- 테스트 코드
 ![img_3.png](img_3.png)
+- 테스트 코드
+![img_4.png](img_4.png)
 
 ## Hot to Run
 ```shell

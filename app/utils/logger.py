@@ -6,11 +6,10 @@ from datetime import datetime, UTC
 from logging.handlers import RotatingFileHandler
 from time import time
 
-from fastapi.logger import logger
-from fastapi.requests import Request
-
 from app.core.config import settings
 from app.utils.date import utc_to_kst
+from fastapi.logger import logger
+from fastapi.requests import Request
 
 log_file_path = os.path.join(settings.BASE_DIR, "logs/server.log")
 if not os.path.exists(os.path.dirname(log_file_path)):

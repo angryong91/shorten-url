@@ -1,16 +1,15 @@
 from typing import Generator
 
 import pytest
+from app.core.config import settings
+from app.main import app
+from app.schemas import Shorts
+from app.services.short import set_cache_url, del_cache_url
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists, drop_database
 from starlette.testclient import TestClient
-
-from app.core.config import settings
-from app.main import app
-from app.schemas import Shorts
-from app.services.short import set_cache_url, del_cache_url
 
 TEST_DATABASE_URL = f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_SERVER}/test"
 TEST_REDIS_URL = f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/test" \

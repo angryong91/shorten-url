@@ -1,13 +1,12 @@
 from datetime import datetime, UTC
 
+from app.db.mysql import db
 from sqlalchemy import (
     Column,
     DateTime,
     or_,
 )
 from sqlalchemy.orm import Session
-
-from app.db.mysql import db
 
 
 class BaseMixin:

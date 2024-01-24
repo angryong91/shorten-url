@@ -1,8 +1,7 @@
-from fastapi import FastAPI
-from motor.motor_asyncio import AsyncIOMotorClient
-
 from app.core.config import Settings
 from app.utils.logger import logger
+from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
 
 
 class MongoDB:

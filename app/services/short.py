@@ -1,5 +1,5 @@
 from datetime import datetime, UTC
-from typing import Union, List, Dict, Any
+from typing import Union
 
 from app.db.mongo import mongodb
 from app.db.redis import get_client
@@ -50,12 +50,12 @@ async def create_short_click(short_id: str):
 async def count_short_click(short_id: str) -> list[dict[str, int]]:
     date_list = datetime_range()
     result = []
-    for i in range(len(date_list)-1):
+    for i in range(len(date_list) - 1):
         date_dict = dict()
         start_date = date_list[i]
-        end_date = date_list[i+1]
+        end_date = date_list[i + 1]
         date_dict["time"] = end_date
-        date_dict["counts"] = await mongodb.collection.count_documents(
+        date_dict["count"] = await mongodb.collection.count_documents(
             {"short_id": short_id, "created_at": {"$gte": start_date, "$lt": end_date}})
         result.append(date_dict)
 

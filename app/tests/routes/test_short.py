@@ -1,8 +1,7 @@
+from app.models.short import ShortCreate, ShortInfo, ShortCounts
+from app.tests.conftest import app_client, db_session, create_shorts
 from fastapi.encoders import jsonable_encoder
 from starlette.testclient import TestClient
-
-from app.models.short import ShortCreate, ShortInfo
-from app.tests.conftest import app_client, db_session, create_shorts
 
 
 def test_create_short_link(app_client: TestClient, db_session):
@@ -39,3 +38,12 @@ def test_redirect_to_original(app_client: TestClient, db_session, create_shorts)
     response = app_client.get("/api/v1/shorts/r/abc", follow_redirects=False)
 
     assert response.status_code == 404
+
+
+def test_count_shorts(app_client: TestClient, db_session, create_shorts):
+    response = app_client.get("/api/v1/shorts/count/3rc")
+    response_json = response.json()
+
+    assert response.status_code == 200
+    for d in response_json:
+        assert ShortCounts(time=d["time"], count=d["count"])

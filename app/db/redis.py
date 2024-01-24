@@ -1,8 +1,7 @@
 from typing import Union
 
-from redis import Redis, from_url
-
 from app.core.config import settings
+from redis import Redis, from_url
 
 redis_client: Union[Redis, None] = None
 

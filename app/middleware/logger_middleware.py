@@ -1,12 +1,11 @@
 import time
 from typing import Callable, Awaitable
 
+from app.exceptions import exception_handler
+from app.utils.logger import api_logger
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, StreamingResponse
-
-from app.exceptions import exception_handler
-from app.utils.logger import api_logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):

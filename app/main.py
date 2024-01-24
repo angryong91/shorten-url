@@ -1,22 +1,21 @@
 import uvicorn
-from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
-
 from app.core.config import settings
 from app.db.mongo import mongodb
 from app.db.mysql import db
 from app.db.redis import set_client, discard_client
 from app.middleware.logger_middleware import LoggerMiddleware
 from app.routes import api_router
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 
 def create_app():
     app = FastAPI(
-            title=settings.PROJECT_NAME,
-            description=settings.PROJECT_NAME,
-            docs_url=f"/swagger",
-            redoc_url=f"/redoc",
-            debug=True
+        title=settings.PROJECT_NAME,
+        description=settings.PROJECT_NAME,
+        docs_url=f"/swagger",
+        redoc_url=f"/redoc",
+        debug=True
     )
 
     # init database

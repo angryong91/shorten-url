@@ -1,9 +1,8 @@
+from app.core.config import Settings
+from app.utils.logger import logger
 from fastapi import FastAPI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-
-from app.core.config import Settings
-from app.utils.logger import logger
 
 
 class SQLAlchemy:
