@@ -6,25 +6,26 @@ from app.db.redis import get_client
 from app.schemas.short import Shorts
 from app.utils.date import datetime_range
 from app.utils.hash import shorten_url
+from sqlalchemy.orm import Session
 
 
-def create_short(origin_url: str) -> Union[None, Shorts]:
+def create_short(origin_url: str, session: Session) -> Union[None, Shorts]:
     hash_url = shorten_url(origin_url)
     count = 3
     while True:
         if count > 10:
             return None
 
-        if get_short(hash_url[:count]):
+        if get_short(hash_url[:count], session):
             count += 1
         else:
-            short = Shorts.create(id=hash_url[:count], origin_url=origin_url)
+            short = Shorts.create(session=session, id=hash_url[:count], origin_url=origin_url)
             set_cache_url(short.id, origin_url)
             return short
 
 
-def get_short(short_id: str) -> Shorts:
-    return Shorts.get(id=short_id)
+def get_short(short_id: str, session: Session) -> Shorts:
+    return Shorts.get(session=session, id=short_id)
 
 
 def get_cache_url(short_id: str) -> str:
