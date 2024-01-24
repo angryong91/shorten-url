@@ -7,7 +7,7 @@ from app.middleware.logger_middleware import LoggerMiddleware
 from app.routes import api_router
 from app.core.config import settings
 from app.db.mysql import db
-from app.db.redis import redis
+from app.db.redis import set_client, discard_client
 
 
 def create_app():
@@ -22,8 +22,9 @@ def create_app():
     # init database
     db.init_app(app, settings)
 
-    # set redis conn
-    redis.init_app(app, settings)
+    # init redis
+    app.add_event_handler('startup', set_client)
+    app.add_event_handler('shutdown', discard_client)
 
     # set middleware
     app.add_middleware(

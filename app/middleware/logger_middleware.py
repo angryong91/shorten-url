@@ -12,7 +12,12 @@ class LoggerMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: Callable[[Request], Awaitable[StreamingResponse]]):
         request.state.start = time.time()
         request.state.service = None
-        ip = request.headers["x-forwarded-for"] if "x-forwarded-for" in request.headers.keys() else request.client.host
+        if "x-forwarded-for" in request.headers and request.client:
+            ip = request.headers["x-forwarded-for"]
+        elif request.client:
+            ip = request.client.host
+        else:
+            ip = "unknown"
         request.state.ip = ip.split(",")[0] if "," in ip else ip
         try:
             response = await call_next(request)

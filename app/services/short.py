@@ -1,11 +1,8 @@
-import hashlib
 from typing import Union
-from uuid import uuid4
 
-import base62
-
-from app.db.redis import redis
+from app.db.redis import get_client
 from app.schemas.short import Shorts, ShortClicks
+from app.utils.hash import shorten_url
 
 
 def create_short(origin_url: str) -> Union[None, Shorts]:
@@ -29,17 +26,15 @@ def get_short(short_id: str) -> Shorts:
 
 
 def get_cache_url(short_id: str) -> str:
-    return redis.client.get(short_id)
+    redis = get_client()
+    return redis.get(short_id)
 
 
 def set_cache_url(short_id: str, origin_url: str, expire_time: int = 3600) -> bool:
-    return redis.client.set(short_id, str(origin_url), expire_time)
+    redis = get_client()
+    return redis.set(short_id, str(origin_url), expire_time)
+
 
 def update_short_click(short_id: str):
     short_click = ShortClicks.get(short_id=short_id)
     ShortClicks.filter(short_id=short_id).update(click_count=short_click.click_count + 1)
-
-
-def shorten_url(url: str) -> str:
-    md5_hash = hashlib.md5(f"{url}{uuid4()}".encode()).hexdigest()
-    return base62.encode(int(md5_hash, 16))

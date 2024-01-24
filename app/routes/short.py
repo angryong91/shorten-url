@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 
 from app.exceptions import Conflict, NotFound
 from app.models.short import ShortCreate, ShortInfo
-from app.services.short import create_short, get_short, get_cache_url, update_short_click
+from app.services.short import create_short, get_short, get_cache_url, update_short_click, set_cache_url
 
 router = APIRouter()
 
@@ -24,13 +24,14 @@ def get_original_url(short_id: str):
     return ShortInfo(short_id=short.id, url=short.origin_url, created_at=short.created_at)
 
 
-@router.get("/r/{short_id}", response_class=HTMLResponse)
+@router.get("/r/{short_id}", response_class=RedirectResponse)
 def redirect_to_original(short_id: str):
     origin_url = get_cache_url(short_id)
     if not origin_url:
         short = get_short(short_id)
         if not short:
             raise NotFound()
+        set_cache_url(short_id, short.origin_url)
         origin_url = short.origin_url
 
     update_short_click(short_id)

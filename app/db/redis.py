@@ -1,27 +1,22 @@
+from typing import Union
+
 from redis import Redis, from_url
 
-from app.core.config import Settings
+from app.core.config import settings
 
-import logging
-
-from fastapi import FastAPI
+redis_client: Union[Redis, None] = None
 
 
-class RedisClient:
-    def __init__(self) -> None:
-        self.client: Redis = None
-
-    def init_app(self, app: FastAPI = None, settings: Settings = None):
-        if app:
-            @app.on_event("startup")
-            def startup():
-                self.client = from_url(url=settings.REDIS_URL, decode_responses=True)
-                logging.info("redis connected")
-
-            @app.on_event("shutdown")
-            def shutdown():
-                self.client.close()
-                logging.info("redis disconnected")
+def set_client(redis_url=settings.REDIS_URL) -> None:
+    global redis_client
+    redis_client = from_url(url=redis_url, decode_responses=True)
 
 
-redis = RedisClient()
+def get_client() -> Redis:
+    global redis_client
+    return redis_client
+
+
+async def discard_client() -> None:
+    global redis_client
+    redis_client.close()

@@ -5,13 +5,12 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: test
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin1234
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./mysql/db:/var/lib/mysql
       - ./mysql-init.sql:/docker-entrypoint-initdb.d/init.sql
 
   redis:
@@ -19,6 +18,3 @@ services:
     command: redis-server --requirepass test1234
     ports:
       - "6379:6379"
-
-volumes:
-  mysql_data:

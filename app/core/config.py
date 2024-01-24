@@ -12,9 +12,10 @@ load_dotenv(verbose=True)
 class Settings(BaseSettings):
     PROJECT_NAME: str = 'ab180-shorten-url'
     DOMAIN: str = environ.get("DOMAIN", "localhost")
+    PORT: int = environ.get("PORT", "8080")
     BASE_DIR: str = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
     API_V1_STR: str = "/api/v1"
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost", "http://localhost:8080"]
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [f"http://{DOMAIN}", f"http://{DOMAIN}:{PORT}"]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode='before')
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
@@ -38,7 +39,7 @@ class Settings(BaseSettings):
     # redis
     REDIS_HOST: str = environ.get("REDIS_HOST", "localhost")
     REDIS_PORT: int = environ.get("REDIS_PORT", "6379")
-    REDIS_PASSWORD: str = environ.get("REDIS_PASSWORD", "")
+    REDIS_PASSWORD: str = environ.get("REDIS_PASSWORD", "test1234")
     REDIS_URL: str = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}" \
         if REDIS_PASSWORD else f"redis://{REDIS_HOST}:{REDIS_PORT}"
 

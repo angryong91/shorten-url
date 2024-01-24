@@ -1,11 +1,10 @@
-import logging
-
 from fastapi import FastAPI
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
+from app.utils.logger import logger
 
 
 class SQLAlchemy:
@@ -31,13 +30,13 @@ class SQLAlchemy:
             @app.on_event("startup")
             def startup():
                 self._engine.connect()
-                logging.info("DB connected.")
+                logger.info("DB connected.")
 
             @app.on_event("shutdown")
             def shutdown():
                 self._session.close_all()
                 self._engine.dispose()
-                logging.info("DB disconnected")
+                logger.info("DB disconnected")
 
     def get_db(self):
         if self._session is None:
