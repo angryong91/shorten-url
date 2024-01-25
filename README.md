@@ -48,7 +48,7 @@ Server Architecture
 ![server.png](server.png)
 
 
-## Hot to Run
+## How to Run
 ```shell
 # 가상환경 구축 및 활성 
 virtualenv venv --python=python3.12
