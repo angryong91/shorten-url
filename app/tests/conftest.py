@@ -11,10 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists, drop_database
 from starlette.testclient import TestClient
 
-TEST_DATABASE_URL = f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_SERVER}/test"
-TEST_REDIS_URL = f"redis://:{settings.REDIS_PASSWORD}@{settings.REDIS_HOST}:{settings.REDIS_PORT}/test" \
-    if settings.REDIS_PASSWORD else f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/test"
-TestBase = declarative_base()
+TEST_DATABASE_URL = f"sqlite:///{settings.BASE_DIR}/app/db/test.db"
 
 
 @pytest.fixture(scope="session")

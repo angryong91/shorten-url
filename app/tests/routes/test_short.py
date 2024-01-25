@@ -1,4 +1,6 @@
 from app.models.short import ShortCreate, ShortInfo, ShortCounts
+from app.schemas import Shorts
+from app.services.short import del_cache_url
 from app.tests.conftest import app_client, db_session, create_shorts
 from fastapi.encoders import jsonable_encoder
 from starlette.testclient import TestClient
@@ -11,6 +13,9 @@ def test_create_short_link(app_client: TestClient, db_session):
 
     assert response.status_code == 201
     assert ShortInfo(short_id=response_json["shortId"], url=response_json["url"], created_at=response_json["createdAt"])
+
+    Shorts.filter(id="3rc").delete()
+    del_cache_url("3rc")
 
 
 def test_get_original_url(app_client: TestClient, db_session, create_shorts):
@@ -33,6 +38,9 @@ def test_redirect_to_original(app_client: TestClient, db_session, create_shorts)
 
     assert response.status_code == 302
     assert response.headers["location"] == "https://airbridge.io"
+
+    Shorts.filter(id="3rc").delete()
+    del_cache_url("3rc")
 
     # Case 3: Origin URL is not found in cache & database
     response = app_client.get("/api/v1/shorts/r/abc", follow_redirects=False)

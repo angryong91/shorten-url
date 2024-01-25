@@ -2,7 +2,7 @@ from typing import List
 
 from app.db.mysql import db
 from app.exceptions import Conflict, NotFound
-from app.models.short import ShortCreate, ShortInfo, ShortCounts
+from app.models.short import ShortCreate, ShortInfo, ShortCounts, ShortId
 from app.services.short import create_short, get_short, get_cache_url, set_cache_url, create_short_click, \
     count_short_click
 from fastapi import APIRouter, Depends
@@ -22,7 +22,8 @@ def create_short_link(payload: ShortCreate, session: Session = Depends(db.get_db
 
 @router.get("/short-links/{short_id}", response_model=ShortInfo)
 def get_original_url(short_id: str, session: Session = Depends(db.get_db)):
-    short = get_short(short_id, session)
+    short_id = ShortId(short_id=short_id).short_id
+    short = get_short(ShortId(short_id=short_id).short_id, session)
     if not short:
         raise NotFound()
     return ShortInfo(short_id=short.id, url=short.origin_url, created_at=short.created_at)
@@ -30,6 +31,7 @@ def get_original_url(short_id: str, session: Session = Depends(db.get_db)):
 
 @router.get("/r/{short_id}", response_class=RedirectResponse)
 async def redirect_to_original(short_id: str, session: Session = Depends(db.get_db)):
+    short_id = ShortId(short_id=short_id).short_id
     origin_url = get_cache_url(short_id)
     if not origin_url:
         short = get_short(short_id, session)
@@ -44,6 +46,7 @@ async def redirect_to_original(short_id: str, session: Session = Depends(db.get_
 
 @router.get("/count/{short_id}", status_code=200, response_model=List[ShortCounts])
 async def count_shorts(short_id: str, session: Session = Depends(db.get_db)):
+    short_id = ShortId(short_id=short_id).short_id
     short = get_short(short_id, session)
     if not short:
         raise NotFound()
