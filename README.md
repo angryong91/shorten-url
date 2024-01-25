@@ -29,7 +29,7 @@ Data / Resource
 DataBase
 - short id(unique) : mysql
     - 데이터의 일관성과 안전성
-    - 서비스 기능 확장
+    - 서비스 기능 확장 고려
 - 대용량 데이터(click count): mongodb
     - scale out 및 대용량 데이터 처리
     - key-value 형태 조회 성능
@@ -45,7 +45,7 @@ Hash
     - 3글자 이상의 alphanumeric 문자열 조건
 
 Server Architecture
-![img_5.png](img_5.png)
+![server.png](server.png)
 
 
 ## Hot to Run
