@@ -70,5 +70,5 @@ uvicorn app.main:app --host localhost --port 8080
 ```
 
 ## API
-- swagger url: http://localhost:8080/swagger#
+- swagger url: http://localhost:8080/swagger
 - redoc url: http://localhost:8080/redoc
