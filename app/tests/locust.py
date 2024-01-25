@@ -11,7 +11,7 @@ class LocustUser(HttpUser):
     def create_task(self):
         try:
             self.client.post("/api/v1/shorts/short-links",
-                                        json={"url": "https://airbridge.io"})
+                             json={"url": "https://airbridge.io"})
 
         except:
             print(traceback.format_exc())
