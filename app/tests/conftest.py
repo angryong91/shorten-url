@@ -6,7 +6,6 @@ from app.main import app
 from app.schemas import Shorts
 from app.services.short import set_cache_url, del_cache_url
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import create_database, database_exists, drop_database
 from starlette.testclient import TestClient

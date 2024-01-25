@@ -5,15 +5,15 @@
 
 ## Features
 - Short Link 생성 API
-![img.png](img.png)
+![img.png](markdown/img.png)
 - Short Link 조회 API
-![img_1.png](img_1.png)
+![img_1.png](markdown/img_1.png)
 - Short Link Origin url redirect API
-![img_2.png](img_2.png)
+![img_2.png](markdown/img_2.png)
 - Short Link 7일 조회 API
-![img_3.png](img_3.png)
+![img_3.png](markdown/img_3.png)
 - 테스트 코드
-![img_4.png](img_4.png)
+![img_4.png](markdown/img_4.png)
 - [locust 테스트 결과](app%2Flocust_test_report.html)
 
 

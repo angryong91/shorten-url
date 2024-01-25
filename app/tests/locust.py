@@ -1,5 +1,5 @@
-import traceback
 import random
+import traceback
 
 from locust import HttpUser, task, between
 
