@@ -1,5 +1,6 @@
 from datetime import datetime, UTC
 from typing import Union
+from pymongo import UpdateOne
 
 from app.db.mongo import mongodb
 from app.db.redis import get_client
@@ -48,16 +49,26 @@ async def create_short_click(short_id: str):
     await mongodb.collection.insert_one(short_click)
 
 
+# Todo : develop aggregate
 async def count_short_click(short_id: str) -> list[dict[str, int]]:
     date_list = datetime_range()
-    result = []
+    bulk_operations = []
+
     for i in range(len(date_list) - 1):
-        date_dict = dict()
         start_date = date_list[i]
         end_date = date_list[i + 1]
-        date_dict["time"] = end_date
-        date_dict["count"] = await mongodb.collection.count_documents(
-            {"short_id": short_id, "created_at": {"$gte": start_date, "$lt": end_date}})
-        result.append(date_dict)
 
+        query = {"short_id": short_id, "created_at": {"$gte": start_date, "$lt": end_date}}
+        bulk_operations.append(UpdateOne(query, {"$set": {"count": 1}}, upsert=True))
+
+    if bulk_operations:
+        await mongodb.collection.bulk_write(bulk_operations)
+
+    result = await mongodb.collection.aggregate([
+        {"$match": {"short_id": short_id}},
+        {"$group": {"_id": {"$dateToString": {"format": "%Y-%m-%dT00:00+0000", "date": "$created_at"}},
+                    "count": {"$sum": 1}}},
+        {"$match": {"_id": {"$ne": None}}},
+        {"$project": {"_id": 0, "time": "$_id", "count": {"$ifNull": ["$count", 0]}}}
+    ]).to_list(None)
     return result
